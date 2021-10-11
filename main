@@ -1,0 +1,34 @@
+#!/bin/bash
+dotfiles=$(dirname "$0")
+export PATH="$dotfiles/scripts/:$PATH"
+
+folder_paths=('environment' 'custom_functions', 'paths')
+for folder_path in "${folder_paths[@]}" ;do
+    environment_path="$dotfiles/$folder_path"
+    if [[ ! -d "$environment_path" ]]; then
+        print -P "No '$environment_path' found, creating..."
+        print -P "Remember to add any private variables here that are not to be tracked in git."
+        mkdir "$environment_path"
+    fi
+    for environment in $(ls -a "$environment_path/" | tail -n +3)
+    do 
+        source "$environment_path/$environment"
+    done
+done
+
+folder_paths=('functions' 'alias')
+for folder_path in "${folder_paths[@]}" ;do
+    environment_path="$dotfiles/$folder_path"
+    for environment in $(ls -a "$environment_path/" | tail -n +3)
+    do 
+        source "$environment_path/$environment"
+        if [[ ! -f "$dotfiles/environment/$environment" ]]; then
+            envs="$(cat "$environment_path/$environment" | shls)"
+            if [[ "$envs" ]]; then
+               echo "$envs" | sed 's/^/#/' > "$dotfiles/environment/$environment"
+            fi
+        fi
+    done
+done
+
+source ./zshrc

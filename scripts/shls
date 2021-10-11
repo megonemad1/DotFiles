@@ -1,0 +1,5 @@
+#!/usr/bin/python3
+import sys
+import re
+
+print('\n'.join(set(re.findall('\\$\\w+',str(sys.stdin.read())))))
