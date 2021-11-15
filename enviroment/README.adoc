@@ -1,0 +1,8 @@
+= Environment files
+
+these files all end in ```.env``` and have a format of 
+
+    <Key> <Value>
+
+Environment files are flat ad currently do not support collections.
+by default ```.env``` files are ignored by git for security reasons

@@ -1,34 +1,52 @@
-#!/bin/bash
-dotfiles=$(dirname "$0")
-export PATH="$dotfiles/scripts/:$PATH"
+export DOTFILES=$(dirname $(readlink -f "$0"))
 
-folder_paths=('environment' 'custom_functions', 'paths')
-for folder_path in "${folder_paths[@]}" ;do
-    environment_path="$dotfiles/$folder_path"
-    if [[ ! -d "$environment_path" ]]; then
-        print -P "No '$environment_path' found, creating..."
-        print -P "Remember to add any private variables here that are not to be tracked in git."
-        mkdir "$environment_path"
-    fi
-    for environment in $(ls -a "$environment_path/" | tail -n +3)
-    do 
-        source "$environment_path/$environment"
+for alias_file in $(find "$DOTFILES/alias/" -name "*.sh" -type f); do
+    source "$alias_file"
+done
+
+for function_file in $(find "$DOTFILES/functions/" -type f); do
+    source "$function_file"
+done
+
+for enviroment_file in $(find "$DOTFILES/enviroment/" -name "*.env" -type f); do
+    envup "$enviroment_file"
+done
+
+_ifs="${IFS}"
+IFS=
+for l in $(envsubst < "$DOTFILES/paths.csv"); do  
+    local p="$(echo $l | sed  's/,.*//g')"
+    export PATH="$PATH:$p"                  
+done   
+IFS="${_ifs}"
+unset _ifs
+
+for ssh_config in $(find "$DOTFILES/ssh/" -name "*.ssh_config" -type f); do
+    for host in $(grep 'Host ' "${ssh_config}" | grep -v -e '*' -e '!' | sed -e 's/Host //'); do 
+        alias ${host}="ssh -F '${ssh_config}' '${host}'"
     done
 done
 
-folder_paths=('functions' 'alias')
-for folder_path in "${folder_paths[@]}" ;do
-    environment_path="$dotfiles/$folder_path"
-    for environment in $(ls -a "$environment_path/" | tail -n +3)
-    do 
-        source "$environment_path/$environment"
-        if [[ ! -f "$dotfiles/environment/$environment" ]]; then
-            envs="$(cat "$environment_path/$environment" | shls)"
-            if [[ "$envs" ]]; then
-               echo "$envs" | sed 's/^/#/' > "$dotfiles/environment/$environment"
-            fi
-        fi
-    done
-done
+#source ./zshrc
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
 
-source ./zshrc
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-rust \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-bin-gem-node
+
+### End of Zinit's installer chunk

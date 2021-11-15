@@ -1,0 +1,12 @@
+= Ssh Config Files
+DotFiles has reserved this directory for the ssh_config files for ssh connections.
+'ssh_config' files are aliased to the file name to aid with smooth connections. 
+
+== Example Config
+the following is an example of an ssh config file. the standard ssh_config can use wild cards in the host it is however advisable to avoid that here. the host is also used as the ssh address and so isn't populated with a wildcard
+
+    Host dev
+        HostName dev.example.com
+        User john
+        Port 2322
+

@@ -1,0 +1,1 @@
+alias servefolder="python3 -m http.server"

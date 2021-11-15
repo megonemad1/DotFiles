@@ -1,0 +1,33 @@
+#!/bin/bash
+tryhackme()
+{
+    local tryhackme_server=10.10.10.10
+    ping "${tryhackme_server}" -c 1 -W 500 &>/dev/null
+    if [[ $? != 0 ]]; then
+        >&2 echo 'not connected to OVPN'
+        return 1
+    fi
+    my_ip=$(curl "${tryhackme_server}/whoami" 2>/dev/null)
+    echo "my_ip '$my_ip'" > ./.env
+    if [[ ! "$tryhackme_cookies" ]]; then
+        >&2 echo 'auth'
+        tryhackme_cookies=$(usercookies.py  https://tryhackme.com/login 'connect|_csrf' -b | sed "s/';/;/g" | sed "s/='/=/g")
+    else
+        >&2 echo "using exsisting cookie"
+    fi
+    echo "tryhackme_cookies $tryhackme_cookies">>.env
+
+
+    vms_json=$(curl -b "$tryhackme_cookies" $'https://tryhackme.com/api/vm/running' 2>/dev/null)
+
+    vms=$(echo "${vms_json}" | jq -r '.[] | {"host":.title, "ip":.internalIP} | "\(.host) \(.ip)"' | tr '[:upper:]' '[:lower:]' | tr -s ' ' '_' 2>/dev/null)
+    if [[ $? != 0 ]]; then
+    >&2 echo 'bad auth'
+    return 1
+    fi
+    echo "$vms" >> .envsubst
+    envup .env
+    echo "ip: ${my_ip}"
+    echo "running vm's:"
+    echo "$(echo "${vms}" | tr "\n" " ")"
+}
