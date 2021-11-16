@@ -20,12 +20,12 @@ tryhackme()
 
     vms_json=$(curl -b "$tryhackme_cookies" $'https://tryhackme.com/api/vm/running' 2>/dev/null)
 
-    vms=$(echo "${vms_json}" | jq -r '.[] | {"host":.title, "ip":.internalIP} | "\(.host) \(.ip)"' | tr '[:upper:]' '[:lower:]' | tr -s ' ' '_' 2>/dev/null)
+    vms=$(echo "${vms_json}" | jq -r '.[] | {"host":.title, "ip":.internalIP} | "\(.host)=\(.ip)"' | tr '[:upper:]' '[:lower:]' | tr -s ' ' '_' |  sed 's/=/ /g' 2>/dev/null)
     if [[ $? != 0 ]]; then
     >&2 echo 'bad auth'
     return 1
     fi
-    echo "$vms" >> .envsubst
+    echo "$vms" >> .env
     envup .env
     echo "ip: ${my_ip}"
     echo "running vm's:"
