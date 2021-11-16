@@ -1,0 +1,16 @@
+#!/bin/bash
+
+libname=$(basename "${0}" | sed 's/\..*//g' )
+
+if [[ ! -d "${DOTFILES_LIB}/${libname}" ]]; then
+    echo "installing ${libname}"
+    git clone https://github.com/RoninNakomoto/Sublist3r2.git "${DOTFILES_LIB}/${libname}"  #// Download tool from github
+    python3 -m venv "${DOTFILES_LIB}/${libname}/environment"    #// create a python version 3 virtual environment for sublist3r
+    source "${DOTFILES_LIB}/${libname}/environment/bin/activate"    #// activate sublist3r python environment.
+    python -m pip install --upgrade pip #// update pip inside virtual env.
+    pip install -r "${DOTFILES_LIB}/${libname}/requirements.txt"    #// install sublist3r module dependencies.
+    deactivate
+fi
+source "${DOTFILES_LIB}/${libname}/environment/bin/activate"              #// activate sublist3r python environment.
+python "${DOTFILES_LIB}/${libname}/sublist3r2.py" $@                        #// run sublist3r.py from within activated environment
+deactivate
