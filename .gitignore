@@ -1,3 +1,4 @@
 environment/*
 ssh/*.ssh_config
 *.env
+libs/*
