@@ -1,1 +1,1 @@
-alias clonetemp='clonesub "$RightCueAsciiDoctorTemplates" $@'
+alias clonetemp='clonesub "git@github.com:Rightcue/asciidoc-theming-definition.git" '
