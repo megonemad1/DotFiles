@@ -1,5 +1,6 @@
 export DOTFILES=$(dirname $(readlink -f "$0"))
 export DOTFILES_LIB="${DOTFILES}/libs"
+export WORKON_HOME="${DOTFILES_LIB}"
 
 
 for alias_file in $(find "$DOTFILES/alias/" -name "*.sh" -type f); do
@@ -15,9 +16,10 @@ for enviroment_file in $(find "$DOTFILES/enviroment/" -name "*.env" -type f); do
 done
 
 _ifs="${IFS}"
-IFS=
+IFS='
+'
 for l in $(envsubst < "$DOTFILES/paths.csv"); do  
-    local p="$(echo $l | sed  's/,.*//g')"
+    local p="$(echo $l | sed  's/,.*//g' | sed 's/\n//g')"
     export PATH="$PATH:$p"                  
 done   
 IFS="${_ifs}"
