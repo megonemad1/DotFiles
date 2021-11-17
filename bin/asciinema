@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+libname=$(basename "${0}" | sed 's/\..*//g' )
+
+if [[ ! -d "${DOTFILES_LIB}/${libname}" ]]; then
+    mkdir "${DOTFILES_LIB}/${libname}"
+    python3 -m venv "${DOTFILES_LIB}/${libname}/environment"    #// create a python version 3 virtual environment for sublist3r
+    source "${DOTFILES_LIB}/${libname}/environment/bin/activate"    #// activate sublist3r python environment.
+    python -m pip install --upgrade pip #// update pip inside virtual env.
+    pip install asciinema
+    deactivate
+fi
+source "${DOTFILES_LIB}/${libname}/environment/bin/activate"
+python -m asciinema $@
+ecode=$?
+if [[ "$ecode" != 0 ]]; then
+    python -m asciinema -h
+fi
+deactivate
+exit $ecode
