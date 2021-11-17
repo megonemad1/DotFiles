@@ -1,6 +1,6 @@
 #!/bin/bash
 
-libname=$(basename "${0}" | sed 's/\..*//g' )
+libname=$(rootname)
 
 if [[ ! -d "${DOTFILES_LIB}/${libname}" ]]; then
     echo "installing ${libname}"
