@@ -1,0 +1,3 @@
+#!/bin/bash
+text64="${1}"; shift
+base64 --decode <(echo "${text64}") $@
