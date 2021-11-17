@@ -1,0 +1,11 @@
+alias network_connections='watch ss -tp'
+alias tcp_connections='netstat -ant'
+alias udp_connections='netstat -anu'
+alias connections_with_pid='netstat -tulpn'
+alias established_connections='lsof -t'
+alias domain_lookup='dig -x '
+alias hostname_lookup='nbstat -A '
+
+alias dls='sudo fdisk -l'
+alias uneque='sort -u'
+alias counts='grep -c '
