@@ -3,7 +3,7 @@ function clonesub() {
     #git@github.com:Rightcue/asciidoc-theming-definition.git
     local REPOS="$1"
     if [[ ! "${REPOS}"]]; then
-        2&> echo 'no repo found'
+        >&2 echo 'no repo found'
         return 1
     fi
     #/templates/gap_assesment
@@ -45,6 +45,8 @@ function clonesub() {
             echo $CHECKOUT_DIR >>.git/info/sparse-checkout
             git checkout $BRANCH
             git merge --ff-only origin/$BRANCH
+        else
+            >&2 echo 'failed to create DIRECTORY'
         fi
     fi
 }
