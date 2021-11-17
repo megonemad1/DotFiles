@@ -2,7 +2,7 @@
 function clonesub() {
     #git@github.com:Rightcue/asciidoc-theming-definition.git
     local REPOS="$1"
-    if [[ ! "${REPOS}"]]; then
+    if [[ ! "${REPOS}" ]]; then
         >&2 echo 'no repo found'
         return 1
     fi
@@ -17,20 +17,23 @@ function clonesub() {
     if [[ "$4" ]]; then
         BRANCH="$4"
     else
-        if [[ "$BRANCH" ]]; then
-            BRANCH="$BRANCH"
-        else
+    #is in enviroment?
+        if [[ ! "$BRANCH" ]]; then
             BRANCH="main"
         fi
     fi
+
+    echo "cloning from $BRANCH"
     
     if [ -d "$DIR" ]; then
+        echo "updating $DIR"
         # Control will enter here if $DIRECTORY exists.
         cd $DIR
         echo $CHECKOUT_DIR >>.git/info/sparse-checkout
         git checkout $BRANCH
         git merge --ff-only origin/$BRANCH
     else
+        echo "creating $DIR"
         mkdir -p $DIR
         if [ -d "$DIR" ]; then
             cd $DIR
@@ -51,4 +54,5 @@ function clonesub() {
     fi
 }
 
+echo "getting template"
 clonesub $@
