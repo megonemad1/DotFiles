@@ -1,0 +1,1 @@
+alias clonetemp='clonesub "$RightCueAsciiDoctorTemplates" $@'

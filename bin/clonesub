@@ -1,0 +1,52 @@
+#!/bin/zsh
+function clonesub() {
+    #git@github.com:Rightcue/asciidoc-theming-definition.git
+    local REPOS="$1"
+    if [[ ! "${REPOS}"]]; then
+        2&> echo 'no repo found'
+        return 1
+    fi
+    #/templates/gap_assesment
+    local CHECKOUT_DIR="$2"
+    if [[ "$3" ]]; then
+        local DIR="$3"
+    else
+        local DIR="."
+    fi
+    
+    if [[ "$4" ]]; then
+        BRANCH="$4"
+    else
+        if [[ "$BRANCH" ]]; then
+            BRANCH="$BRANCH"
+        else
+            BRANCH="main"
+        fi
+    fi
+    
+    if [ -d "$DIR" ]; then
+        # Control will enter here if $DIRECTORY exists.
+        cd $DIR
+        echo $CHECKOUT_DIR >>.git/info/sparse-checkout
+        git checkout $BRANCH
+        git merge --ff-only origin/$BRANCH
+    else
+        mkdir -p $DIR
+        if [ -d "$DIR" ]; then
+            cd $DIR
+            git init
+            git remote add -f origin $REPOS
+            git remote set-url --push origin '' # kill upstream
+            git fetch --all
+            git config core.sparseCheckout true
+            if [ -f .git/info/sparse-checkout]; then
+                rm .git/info/sparse-checkout
+            fi
+            echo $CHECKOUT_DIR >>.git/info/sparse-checkout
+            git checkout $BRANCH
+            git merge --ff-only origin/$BRANCH
+        fi
+    fi
+}
+
+clonesub $@
