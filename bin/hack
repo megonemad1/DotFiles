@@ -1,0 +1,8 @@
+#!/bin/bash
+ip="${1}"; shift
+fname="${1}"; shift
+if [[ ! "${fname}" ]]; then
+fname="$(mkran -d -p 'hackscan_')"
+fi
+grc sudo nmap -sS -A -p0- -vv -oA "${fname}/hackscan" -script vuln $ip | tee -i "${fname}/hackscan.live" 
+echo "saving to ${fname}/hackscan.*"

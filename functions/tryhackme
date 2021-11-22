@@ -8,7 +8,7 @@ tryhackme()
         return 1
     fi
     my_ip=$(curl "${tryhackme_server}/whoami" 2>/dev/null)
-    echo "my_ip '$my_ip'" > ./.env
+    echo "my_ip $my_ip" > ./.env
     if [[ ! "$tryhackme_cookies" ]]; then
         >&2 echo 'auth'
         tryhackme_cookies=$(usercookies.py  https://tryhackme.com/login 'connect|_csrf' -b | sed "s/';/;/g" | sed "s/='/=/g")

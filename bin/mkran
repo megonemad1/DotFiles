@@ -1,0 +1,51 @@
+#!/bin/python3
+from tempfile import mkstemp, mkdtemp
+from sys import argv, stderr
+from pathlib import Path
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=stderr, **kwargs)
+
+def get_arg_pair(k,l):
+    if k in l:
+        i = l.index(k)
+        if (i+1<len(l)):
+            return l[i+1],l[:i]+l[i+2:]
+    return None,l
+
+def remove_flag(f,l):
+    if f in l:
+        i = l.index(f)
+        return True, l[:i]+l[i+1:]
+    return False, l
+
+args = argv[1:]
+code = 0
+prefix,args = get_arg_pair('-p',args)
+suffix,args = get_arg_pair('-s',args)
+h,args=remove_flag('-h',args)
+d,args=remove_flag('-d',args)
+
+if args == []:
+    args+=['.']
+p = Path(args[-1])
+
+if not p.is_dir() and args[-1] != '-h':
+    eprint(f'dir {p} does not exsist')
+    code=1
+if not h:
+    #try:
+    if d:
+        # make directory
+        print(mkdtemp(suffix=suffix, prefix=prefix, dir=p))
+    else:
+        print(mkstemp(suffix=suffix, prefix=prefix, dir=p, text=False)[-1]) 
+            
+    #except Exception as e:
+     #   eprint(e)
+      #  code = 1
+
+if h or code:
+    print ('usage: mkran [-p prefix] [-s suffix] [-h] [-d] FolderPath')
+    exit(code)
