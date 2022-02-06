@@ -4,7 +4,7 @@ fname="${1}"; shift
 if [[ ! "${fname}" ]]; then
 fname='hackscan'
 fi
-fname="$(mkran -d -p '${fname}_')"
+fname="$(mkran -d -p "${fname}_")"
 
 grc sudo nmap -sSV -A -p0- -vv -oA "${fname}/hackscan" -script vuln $@ $ip | tee -i "${fname}/hackscan.live" 
 echo "saving to ${fname}/hackscan.*"
