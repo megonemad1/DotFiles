@@ -1,0 +1,10 @@
+#!/bin/bash
+function _anonftp()
+{
+    local host="${1}"; shift
+    expect "spawn /usr/bin/ftp '10.10.69.146' $@
+    expect 'Name'
+    send -- 'anonymous'"
+}
+
+_anonftp $@
