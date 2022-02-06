@@ -3,6 +3,10 @@ export DOTFILES_LIB="${DOTFILES}/libs"
 export WORKON_HOME="${DOTFILES_LIB}"
 
 
+if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && [ "$color_prompt" = yes ]; then
+echo 'install color here\nhttps://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md'
+do
+
 for alias_file in $(find "$DOTFILES/alias/" -name "*.sh" -type f); do
     source "$alias_file"
 done
