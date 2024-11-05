@@ -7,8 +7,10 @@ if [ ! -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && [ 
 echo 'install color here\nhttps://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md'
 fi
 if [ ! -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-echo 'install auto surgestions https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md'
+echo 'installing auto surgestions https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md'
+git clone https://github.com/zsh-users/zsh-autosuggestions /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 for alias_file in $(find "$DOTFILES/alias/" -name "*.sh" -type f); do
     source "$alias_file"
 done
