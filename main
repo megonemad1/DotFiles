@@ -11,7 +11,7 @@ echo 'installing auto surgestions https://github.com/zsh-users/zsh-autosuggestio
 mkdir -p "${DOTFILES}/.zsh/"
 git clone https://github.com/zsh-users/zsh-autosuggestions "${DOTFILES}/.zsh/zsh-autosuggestions"
 fi
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source "${DOTFILES}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 for alias_file in $(find "$DOTFILES/alias/" -name "*.sh" -type f); do
     source "$alias_file"
 done
